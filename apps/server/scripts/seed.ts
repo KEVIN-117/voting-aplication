@@ -1,17 +1,19 @@
 
 import {Pool} from "pg"
-import { loadEnvs } from '../src/utils/loadEnvs';
-import bcrypt from "bcrypt";
-import { charactersData, usersData, votesData } from './placeholder-data';
+import * as dotenv from 'dotenv';
+import * as bcrypt from "bcrypt";
+import { charactersData, clientData, commentsData, usersData, votesData, adminData } from './placeholder-data';
 
-loadEnvs();
+dotenv.config();
 async function seedUser(client: Pool){
   const createTable = await client.query(`
-    CREATE TABLE IF NOT EXISTS app.USER (
+    CREATE TABLE IF NOT EXISTS USERS (
       id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
       email VARCHAR(50) NOT NULL UNIQUE,
-      user_role app.role DEFAULT 'USER',
-      password VARCHAR(255) NOT NULL CHECK (length(password) > 0)
+      user_role role DEFAULT 'VOTER',
+      password VARCHAR(255) NOT NULL CHECK (length(password) > 0),
+      created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+      updated_at TIMESTAMP NOT NULL DEFAULT NOW()
     );`)
 
   console.log("User table created");
@@ -20,7 +22,7 @@ async function seedUser(client: Pool){
     usersData.map(async (user) => {
       const hashPassword = await bcrypt.hash(user.password, 10)
       await client.query(`
-        INSERT INTO app.USER (id, email, user_role, password)
+        INSERT INTO USERS (id, email, user_role, password)
         VALUES ('${user.id}', '${user.email}', '${user.user_role}', '${hashPassword}');`)
     })
   )
@@ -34,10 +36,12 @@ async function seedUser(client: Pool){
 
 async function seedCharacter(client: Pool){
   const createTable = await client.query(`
-    CREATE TABLE IF NOT EXISTS app.CHARACTER (
+    CREATE TABLE IF NOT EXISTS CHARACTER (
       id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
       name VARCHAR(50) NOT NULL UNIQUE,
-      description TEXT
+      description TEXT,
+      created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+      updated_at TIMESTAMP NOT NULL DEFAULT NOW()
     );
   `)
 
@@ -46,7 +50,7 @@ async function seedCharacter(client: Pool){
     charactersData.map(
       async (character) => {
         await client.query(`
-          INSERT INTO app.CHARACTER(id, name, description)
+          INSERT INTO CHARACTER(id, name, description)
           VALUES ('${character.id}', '${character.name}', '${character.description}')
         `)
       }
@@ -61,11 +65,13 @@ async function seedCharacter(client: Pool){
 
 async function seedVotes(client: Pool){
   const createTable = await client.query(`
-    CREATE TABLE IF NOT EXISTS app.VOTES(
+    CREATE TABLE IF NOT EXISTS VOTES(
       id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-      user_id UUID REFERENCES app.USER(id) ON DELETE CASCADE ON UPDATE CASCADE,
-      character_id UUID REFERENCES app.CHARACTER(id) ON DELETE CASCADE ON UPDATE CASCADE,
-      vote_value INT NOT NULL CHECK (vote_value >= 0)
+      user_id UUID REFERENCES USERS(id) ON DELETE CASCADE ON UPDATE CASCADE,
+      character_id UUID REFERENCES CHARACTER(id) ON DELETE CASCADE ON UPDATE CASCADE,
+      vote_value INT NOT NULL CHECK (vote_value >= 0),
+      created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+      updated_at TIMESTAMP NOT NULL DEFAULT NOW()
     );
   `)
 
@@ -74,7 +80,7 @@ async function seedVotes(client: Pool){
     votesData.map(
       async (vote)=>{
         await client.query(`
-          INSERT INTO app.VOTES(id, user_id, character_id, vote_value)
+          INSERT INTO VOTES(id, user_id, character_id, vote_value)
           VALUES ('${vote.id}', '${vote.user_id}', '${vote.character_id}', '${vote.vote_value}')
         `)
       }
@@ -87,21 +93,120 @@ async function seedVotes(client: Pool){
   }
 }
 
+async function seedComments(client: Pool){
+  const createTable = await client.query(`
+    CREATE TABLE IF NOT EXISTS COMMENTS(
+      id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+      user_id UUID REFERENCES USERS(id) ON DELETE CASCADE ON UPDATE CASCADE,
+      votes_id UUID REFERENCES VOTES(id) ON DELETE CASCADE ON UPDATE CASCADE,
+      comment TEXT NOT NULL,
+      created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+      updated_at TIMESTAMP NOT NULL DEFAULT NOW()
+    );
+  `)
+  console.log("Comments table created");
+  const insertedData = await Promise.all(
+    commentsData.map(
+      async (comment) => {
+        await client.query(`
+          INSERT INTO COMMENTS(id, user_id, votes_id, comment)
+          VALUES ('${comment.id}', '${comment.user_id}', '${comment.votes_id}', '${comment.comment}')
+        `)
+      }
+    )
+  )
+  console.log("Data inserted");
+  return {
+    createTable,
+    insertedData
+  }
+}
+
+
+async function seedClients(client: Pool){
+  const createTable = await client.query(`
+    CREATE TABLE IF NOT EXISTS CLIENT(
+      id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+      name VARCHAR(50) NOT NULL,
+      last_name VARCHAR(50) NOT NULL,
+      birth_day DATE NOT NULL,
+      address VARCHAR(50) NOT NULL,
+      user_id UUID REFERENCES USERS(id) ON DELETE CASCADE ON UPDATE CASCADE,
+      created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+      updated_at TIMESTAMP NOT NULL DEFAULT NOW()
+    );
+  `)
+  console.log("Client table created");
+  const insertedData = await Promise.all(
+    clientData.map(
+      async (clientData) =>{
+        await client.query(`
+          INSERT INTO CLIENT(id, name, last_name, birth_day, address, user_id)
+          VALUES ('${clientData.id}', '${clientData.name}', '${clientData.last_name}', '${clientData.birth_day}', '${clientData.address}', '${clientData.user_id}')
+        `)
+      }
+    )
+  )
+  console.log("Data inserted");
+  return {
+    createTable,
+    insertedData
+  }
+}
+
+async function seedAdmins(client: Pool){
+  const createTable = await client.query(`
+    CREATE TABLE IF NOT EXISTS ADMIN(
+      id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+      name VARCHAR(50) NOT NULL,
+      last_name VARCHAR(50) NOT NULL,
+      birth_day DATE NOT NULL,
+      address VARCHAR(50) NOT NULL,
+      user_id UUID REFERENCES USERS(id) ON DELETE CASCADE ON UPDATE CASCADE,
+      phone_number VARCHAR(50) NOT NULL,
+      created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+      updated_at TIMESTAMP NOT NULL DEFAULT NOW()
+    );
+  `)
+  console.log("Admin table created");
+  const insertedData = await Promise.all(
+    adminData.map(
+      async (admin) =>{
+        await client.query(`
+          INSERT INTO ADMIN(id, name, last_name, birth_day, address, user_id, phone_number)
+          VALUES ('${admin.id}', '${admin.name}', '${admin.last_name}', '${admin.birth_day}', '${admin.address}', '${admin.user_id}', '${admin.phone_number}')
+        `)
+      }
+    )
+  )
+  console.log("Data inserted");
+  return {
+    createTable,
+    insertedData
+  }
+}
 
 async function buildSeed(){
-  const client =new Pool({
-    connectionString: process.env.DATABASE_URL,
+  const client = new Pool({
+    connectionString: "postgresql://postgres:postgres@localhost:5432/votes",
+  })
+  client.on("connect", () => {
+    console.log("Connected to database");
   })
 
-  await client.query(`CREATE SCHEMA IF NOT EXISTS app;`)
-  console.log("Schema created");
+  client.on("error", console.error)
+
   await client.query(`CREATE EXTENSION IF NOT EXISTS "uuid-ossp";`)
   console.log("uuid-ossp extension created");
-  await client.query(`CREATE TYPE app.role AS ENUM ('USER', 'ADMIN');`)
+  await client.query(`CREATE TYPE role AS ENUM ('VOTER', 'ADMIN');`)
   console.log("Roles created");
   await seedUser(client);
   await seedCharacter(client);
   await seedVotes(client);
+  await seedComments(client);
+  await seedClients(client);
+  await seedAdmins(client);
+  await client.end();
 }
 
 buildSeed().then(() => {

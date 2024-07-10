@@ -25,7 +25,7 @@
       "options": {
         "commands": [
           {
-            "command": "ts-node -P apps/server/tsconfig.json apps/server/scripts/seed.ts"
+            "command": "ts-node -P apps/server/tsconfig.json apps/server/scripts/seed.js"
           }
         ]
       }

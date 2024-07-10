@@ -2,20 +2,20 @@ const usersData = [
   {
     "id": "c2c5d2ef-8f7e-4aaf-bc85-5e8d55c6f71b",
     "email": "usuario1@example.com",
-    "user_role": "USER",
-    "password": "hashed_password_1"
+    "user_role": "VOTER",
+    "password": "c%VrGH9wEi#dr5"
   },
   {
     "id": "1a2b3c4d-5e6f-7a8b-9c0d-1e2f3a4b5c6d",
     "email": "usuario2@example.com",
-    "user_role": "USER",
-    "password": "hashed_password_2"
+    "user_role": "VOTER",
+    "password": "aynG$mZYH7sc!H"
   },
   {
     "id": "abcdef12-3456-7890-abcd-ef1234567890",
     "email": "admin@example.com",
     "user_role": "ADMIN",
-    "password": "hashed_admin_password"
+    "password": "T3pHszYqM^h7mM"
   }
 ]
 
@@ -58,7 +58,7 @@ const charactersData = [
   {
     "id": "00112233-4455-6677-8899-aabbccddeeff",
     "name": "Hermione Granger",
-    "description": "One of Harry Potter's best friends, a talented witch."
+    "description": "One of Harry Potter-s best friends, a talented witch."
   },
   {
     "id": "99887766-5544-3322-1100-0a0b0c0d0e0f",
@@ -135,6 +135,101 @@ const votesData = [
   }
 ]
 
+const commentsData = [
+  {
+    "id": "1a2b3c4d-5e6f-7a8b-9c0d-1e2f3a4b5c6d",
+    "user_id": usersData[0].id,
+    "votes_id": votesData[0].id,
+    "comment": "Gandalf is my favorite character because of his wisdom."
+  },
+  {
+    "id": "550e8400-e29b-41d4-a716-446655440011",
+    "user_id": usersData[1].id,
+    "votes_id": votesData[1].id,
+    "comment": "Frodo-s journey is very inspiring."
+  },
+  {
+    "id": "123e4567-e89b-12d3-a456-426614174011",
+    "user_id": usersData[2].id,
+    "votes_id": votesData[2].id,
+    "comment": "Aragorn is a true leader and hero."
+  },
+  {
+    "id": "78901234-5678-9012-3456-789012345611",
+    "user_id": usersData[0].id,
+    "votes_id": votesData[0].id,
+    "comment": "Darth Vader-s character arc is fascinating."
+  },
+  {
+    "id": "abcdef12-3456-7890-abcd-ef1234567890",
+    "user_id": usersData[1].id,
+    "votes_id": votesData[1].id,
+    "comment": "Harry Potter-s bravery is commendable."
+  },
+  {
+    "id": "f0f1f2f3-f4f5-f6f7-f8f9-fafbfdfef0f1",
+    "user_id": usersData[2].id,
+    "votes_id": votesData[2].id,
+    "comment": "Jon Snow-s story is very compelling."
+  },
+  {
+    "id": "00112233-4455-6677-8899-aabbccddeeff",
+    "user_id": usersData[0].id,
+    "votes_id": votesData[0].id,
+    "comment": "Luke Skywalker is a great hero."
+  },
+  {
+    "id": "99887766-5544-3322-1100-0a0b0c0d0e0f",
+    "user_id": usersData[1].id,
+    "votes_id": votesData[1].id,
+    "comment": "Hermione Granger is incredibly smart and talented."
+  },
+  {
+    "id": "22222222-2222-2222-2222-222222222222",
+    "user_id": usersData[2].id,
+    "votes_id": votesData[2].id,
+    "comment": "Sherlock Holmes-s deductive skills are unmatched."
+  },
+  {
+    "id": "33333333-3333-3333-3333-333333333333",
+    "user_id": usersData[0].id,
+    "votes_id": votesData[0].id,
+    "comment": "Spider-Man-s agility and spider-sense make him a unique superhero."
+  }
+]
 
 
-export { usersData, charactersData, votesData }
+const clientData = [
+  {
+    "id": "e3a1c3e8-1234-5678-90ab-cdef12345678",
+    "name": "John",
+    "last_name": "Doe",
+    "birth_day": "1985-04-12",
+    "address": "123 Main St",
+    "user_id": usersData[0].id
+  },
+  {
+    "id": "f1a2b3c4-5678-90ab-cdef-1234567890ab",
+    "name": "Jane",
+    "last_name": "Smith",
+    "birth_day": "1990-11-23",
+    "address": "456 Elm St",
+    "user_id": usersData[1].id
+  }
+]
+
+const adminData = [
+  {
+    "id": "d4e5f6a7-8901-2345-6789-abcdef012345",
+    "name": "Alice",
+    "last_name": "Johnson",
+    "birth_day": "1982-07-19",
+    "address": "789 Oak St",
+    "user_id": usersData[2].id,
+    "phone_number": "+1234567890"
+  }
+
+]
+
+
+export { usersData, charactersData, votesData, commentsData, clientData, adminData }

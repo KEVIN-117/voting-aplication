@@ -118,3 +118,19 @@ npm run dev:server
 ## Disenio de la Base de Datos
 
 ![img.png](img.png)
+
+## Poblar la Base de Datos (Seed)
+
+Para poblar la base de datos con datos falsos ejecute los siguientes comandos:
+
+```bash
+# Compilar los archivos TypeScript
+npx tsc .\apps\server\scripts\placeholder-data.ts
+npx tsc .\apps\server\scripts\seed.ts
+```
+- Ejecutar el script para crear las tablas y poblar la base de datos
+```bash
+node .\apps\server\scripts\seed.js
+```
+
+

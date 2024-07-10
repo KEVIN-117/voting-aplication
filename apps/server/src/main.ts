@@ -4,30 +4,34 @@
  */
 
 import express from 'express';
-import * as path from 'path';
 import { db } from "./db/drizzle/config"
 import { loadEnvs } from './utils/loadEnvs';
 import { sql } from 'drizzle-orm';
-
+import morgan from 'morgan';
+import { ErrorHandler } from './middleware/error.middleware';
+import { characterRouter } from './route/character.route';
 
 loadEnvs();
 
 const app = express();
 
-app.use('/assets', express.static(path.join(__dirname, 'assets')));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(morgan('dev'))
 
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, '/assets/index.html'));
-});
 
 app.get('/api', (req, res) => {
   res.send({ message: 'Welcome to server!' });
 });
 
+app.use('/api', characterRouter)
+
+app.use(ErrorHandler)
 const port = process.env.PORT || 3333;
 const server = app.listen(port, async () => {
   console.log(`Listening at http://localhost:${port}/api`);
   const result = await db.execute(sql`select now() as ts`);
+  //const users = await db.select().from(User)
   console.log(result.rows[0]);
 });
 server.on('error', console.error);

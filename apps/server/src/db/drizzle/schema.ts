@@ -1,26 +1,24 @@
-import { pgSchema, uuid, varchar, text, integer, timestamp, date } from "drizzle-orm/pg-core"
+import {uuid, varchar, text, integer, timestamp, date, pgTable, pgEnum } from "drizzle-orm/pg-core"
 import { sql } from "drizzle-orm"
 import { db } from "./config"
-
-export const schema = pgSchema("app")
 
 db.execute(sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`).then(() => {
   console.log("uuid-ossp extension created")
 })
 
-export const roles = schema.enum("roles", ["admin", "user"])
+export const roles = pgEnum("roles", ["admin", "user"])
 
-export const userTable = schema.table('user', {
+export const User = pgTable('users', {
   id: uuid("id").primaryKey().$default(()=> sql`uuid_generate_v4()`),
   email: varchar("email", {
     length: 50,
   }).unique().notNull(),
-  user_role: roles("user_role").notNull().default("user"),
+  userRole: roles("user_role").notNull().default("user"),
   createdAt: timestamp("created_at").notNull().default(sql`now()`),
   updatedAt: timestamp("updated_at").notNull().default(sql`now()`),
 })
 
-export const charactersTable = schema.table('character', {
+export const Character = pgTable('character', {
   id: uuid("id").primaryKey().$default(()=> sql`uuid_generate_v4()`),
   name: varchar("name", {
     length: 50,
@@ -30,13 +28,13 @@ export const charactersTable = schema.table('character', {
   updatedAt: timestamp("updated_at").notNull().default(sql`now()`),
 })
 
-export const votesTable = schema.table('votes', {
+export const Vote = pgTable('votes', {
   id: uuid("id").primaryKey().$default(()=> sql`uuid_generate_v4()`),
-  userId: uuid("user_id").notNull().references(()=> userTable.id, {
+  userId: uuid("user_id").notNull().references(()=> User.id, {
     onDelete: "cascade",
     onUpdate: "cascade",
   }),
-  characterId: uuid("character_id").notNull().references(()=> charactersTable.id, {
+  characterId: uuid("character_id").notNull().references(()=> Character.id, {
     onDelete: "cascade",
     onUpdate: "cascade",
   }),
@@ -45,13 +43,13 @@ export const votesTable = schema.table('votes', {
   updatedAt: timestamp("updated_at").notNull().default(sql`now()`),
 })
 
-export const commentsTable = schema.table('comments', {
+export const Comment = pgTable('comments', {
   id: uuid("id").primaryKey().$default(()=> sql`uuid_generate_v4()`),
-  userId: uuid("user_id").notNull().references(()=> userTable.id, {
+  userId: uuid("user_id").notNull().references(()=> User.id, {
     onDelete: "cascade",
     onUpdate: "cascade",
   }),
-  votesId: uuid("votes_id").notNull().references(()=> votesTable.id, {
+  votesId: uuid("votes_id").notNull().references(()=> Vote.id, {
     onDelete: "cascade",
     onUpdate: "cascade",
   }),
@@ -60,7 +58,7 @@ export const commentsTable = schema.table('comments', {
   updatedAt: timestamp("updated_at").notNull().default(sql`now()`),
 })
 
-export const clientTable = schema.table('client', {
+export const Client = pgTable('client', {
   id: uuid("id").primaryKey().$default(()=> sql`uuid_generate_v4()`),
   name: varchar("name", {
     length: 50,
@@ -72,7 +70,7 @@ export const clientTable = schema.table('client', {
     mode: "string",
   }).notNull(),
   address: text("address").notNull(),
-  userId: uuid("user_id").notNull().references(()=> userTable.id, {
+  userId: uuid("user_id").notNull().references(()=> User.id, {
     onDelete: "cascade",
     onUpdate: "cascade",
   }),
@@ -80,7 +78,7 @@ export const clientTable = schema.table('client', {
   updatedAt: timestamp("updated_at").notNull().default(sql`now()`),
 })
 
-export const adminTable = schema.table('admin', {
+export const Admin = pgTable('admin', {
   id: uuid("id").primaryKey().$default(()=> sql`uuid_generate_v4()`),
   name: varchar("name", {
     length: 50,
@@ -92,7 +90,7 @@ export const adminTable = schema.table('admin', {
     mode: "string",
   }).notNull(),
   address: text("address").notNull(),
-  userId: uuid("user_id").notNull().references(()=> userTable.id, {
+  userId: uuid("user_id").notNull().references(()=> User.id, {
     onDelete: "cascade",
     onUpdate: "cascade",
   }),
