@@ -69,4 +69,14 @@ export class CharacterService implements Operations<CharacterDto>{
       throw new Error(`Error fetching character: ${e.message}`)
     }
   }
+
+  async findByName(name: string): Promise<CharacterDto>{
+    try {
+      const result = await this.client.select().from(Character).where(eq(Character.name, name))
+      return result[0];
+    }catch (e){
+      console.error(e);
+      throw new Error(`Error fetching character: ${e.message}`)
+    }
+  }
 }

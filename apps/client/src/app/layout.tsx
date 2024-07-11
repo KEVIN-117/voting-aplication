@@ -1,4 +1,6 @@
 import './global.css';
+import NavBar from '../components/ui/NavBar';
+import { ThemeProvider } from '../components/theme-provider';
 
 export const metadata = {
   title: 'Welcome to client',
@@ -12,7 +14,19 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <ThemeProvider
+          attribute={'class'}
+          defaultTheme={'system'}
+          enableColorScheme
+          disableTransitionOnChange
+        >
+          <NavBar />
+          <main>
+            {children}
+          </main>
+        </ThemeProvider>
+      </body>
     </html>
   );
 }

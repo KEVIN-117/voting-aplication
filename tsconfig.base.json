@@ -14,7 +14,12 @@
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
-    "paths": {}
+    "paths": {
+      "@app/*": ["apps/client/src/*"],
+      "@components/*": ["apps/client/src/components/*"],
+      "@utils/*": ["apps/client/src/utils/*"],
+      "@server/*": ["apps/server/src/*"],
+    }
   },
   "exclude": ["node_modules", "tmp"]
 }

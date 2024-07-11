@@ -14,9 +14,7 @@ export function SchemaValidator(schema: AnyZodObject){
       if (e instanceof ZodError){
         return res.status(400).json(
           e.issues.map((issue) => ({
-            path: issue.path,
-            message: issue.message,
-            code: issue.code,
+            message: issue.message
           }))
         )
       }

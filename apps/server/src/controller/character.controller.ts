@@ -9,8 +9,12 @@ const characterService: CharacterService = new CharacterService(db);
 const createCharacter = async (req: Request, res: Response, next: NextFunction) => {
   try {
       const data: CharacterDto = req.body;
-      const result = await characterService.create(data);
-      return res.status(201).json(result);
+      await characterService.create(data);
+      const result = await characterService.findByName(data.name);
+      return res.status(201).json({
+        message: 'Character created successfully',
+        data: result
+      });
   }catch (e){
     next(e)
   }
