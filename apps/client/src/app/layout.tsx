@@ -1,5 +1,7 @@
+import { ClerkProvider } from '@clerk/nextjs'
+
 import './global.css';
-import NavBar from '../components/ui/NavBar';
+import NavBar from '../components/ui/NavBar/NavBar';
 import { ThemeProvider } from '../components/theme-provider';
 
 export const metadata = {
@@ -13,20 +15,25 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <ClerkProvider>
+
+      <html lang="en">
       <body>
-        <ThemeProvider
-          attribute={'class'}
-          defaultTheme={'system'}
-          enableColorScheme
-          disableTransitionOnChange
-        >
-          <NavBar />
-          <main>
-            {children}
-          </main>
-        </ThemeProvider>
+      <ThemeProvider
+        attribute={'class'}
+        defaultTheme={'system'}
+        enableColorScheme
+        disableTransitionOnChange
+      >
+        <NavBar />
+
+        <main>
+          {children}
+        </main>
+      </ThemeProvider>
       </body>
-    </html>
+      </html>
+    </ClerkProvider>
+
   );
 }

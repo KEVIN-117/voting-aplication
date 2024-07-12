@@ -36,29 +36,52 @@ export function ModeToggle() {
     }
   }
 
+  const menuItems = [
+    {
+      icon: <Sun />,
+      text: "Light",
+      onClick: () => handleThemeChange("light")
+    },
+    {
+      icon: <Moon />,
+      text: "Dark",
+      onClick: () => handleThemeChange("dark")
+    },
+    {
+      icon: <SunMoon />,
+      text: "System",
+      onClick: () => handleThemeChange("system")
+    }
+  ]
+
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild>
+      <DropdownMenuTrigger asChild className={"rounded-full"}>
         <Button variant="outline" size="icon">
           {themeIcon?.icon || <Sun />}
           <span className="sr-only">Toggle theme</span>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        <DropdownMenuItem onClick={() => handleThemeChange("light")}>
-          <Sun />
-          Light
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => handleThemeChange("dark")}>
-          <Moon />
-          Dark
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => handleThemeChange("system")}>
-          <SunMoon />
-          System
-        </DropdownMenuItem>
+      <DropdownMenuContent className={"border-none flex gap-5"} align="center">
+        {menuItems.map((item, index) => {
+          return(
+            <DropDownItem key={index} icon={item.icon} text={item.text} onClick={item.onClick} />
+          )
+        })}
       </DropdownMenuContent>
     </DropdownMenu>
+  )
+}
+
+
+function DropDownItem({icon, text, onClick}: {icon: ReactNode, text: string, onClick: () => void}) {
+  return(
+    <DropdownMenuItem
+      className={"hover:border hover:border-slate-600 transition delay-75 duration-100 ease-in-out flex justify-between items-center"}
+      onClick={onClick}>
+      {icon}
+      {text}
+    </DropdownMenuItem>
   )
 }

@@ -1,9 +1,7 @@
 import { Button } from "../components/ui/button"
 
 export default async function Page(){
-  const character = await fetch(`http://localhost:3333/api/character`)
 
-  const data = await character.json()
   return (
     <div>
       <div className={"w-[90%] mx-auto bg-slate-900/20 border border-slate-900 text-slate-500 space-y-5"}>

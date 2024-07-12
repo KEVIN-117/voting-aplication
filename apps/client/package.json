@@ -10,6 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@clerk/nextjs": "^5.2.2",
     "@headlessui/react": "^2.1.2",
     "@heroicons/react": "^2.1.5",
     "@radix-ui/react-avatar": "^1.1.0",
