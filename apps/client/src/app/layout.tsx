@@ -1,4 +1,4 @@
-import { ClerkProvider } from '@clerk/nextjs'
+
 
 import './global.css';
 import NavBar from '../components/ui/NavBar/NavBar';
@@ -15,25 +15,20 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <ClerkProvider>
-
-      <html lang="en">
+    <html lang="en">
       <body>
-      <ThemeProvider
-        attribute={'class'}
-        defaultTheme={'system'}
-        enableColorScheme
-        disableTransitionOnChange
-      >
-        <NavBar />
-
-        <main>
-          {children}
-        </main>
-      </ThemeProvider>
+        <ThemeProvider
+          attribute={'class'}
+          defaultTheme={'system'}
+          enableColorScheme
+          disableTransitionOnChange
+        >
+          <NavBar />
+          <main>
+            {children}
+          </main>
+        </ThemeProvider>
       </body>
-      </html>
-    </ClerkProvider>
-
+    </html>
   );
 }

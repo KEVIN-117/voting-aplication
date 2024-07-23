@@ -22,3 +22,59 @@
     transform: rotate(360deg);
   }
 }
+
+.mobile_nav {
+  width: 100vw;
+}
+
+.background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 100vw;
+}
+
+.menu_button {
+  outline: none;
+  border: none;
+  cursor: pointer;
+  position: absolute;
+  top: 5px;
+  left: 15px;
+  margin: auto;
+  border-radius: 50%;
+}
+
+.menu_ul,
+.menu_li {
+  margin: 0;
+  padding: 0;
+}
+
+.menu_ul {
+  padding: 25px;
+  position: absolute;
+  top: 100px;
+  left: 0;
+  right: 0;
+  width: 80vw;
+  margin: auto;
+}
+
+.menu_li {
+  list-style: none;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  text-align: center;
+}
+
+
+.text_placeholder {
+  border-radius: 5px;
+  flex: 1;
+}
+
+
